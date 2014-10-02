@@ -1,9 +1,7 @@
 user_information_user_homepage:
     path:     /hello/{name}
-    defaults: { _controller: UserInformationUserBundle:Default:index }
-
-user_information_user_index:
-    pattern:  /
     defaults: { _controller: UserInformationUserBundle:Secured:index }
-    requirements:
-        _method:  GET
+
+user_information_user_login:
+    path:     /login
+    defaults: { _controller: UserInformationUserBundle:Secured:login }

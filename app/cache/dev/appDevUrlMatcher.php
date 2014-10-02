@@ -27,6 +27,58 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
         $context = $this->context;
         $request = $this->request;
 
+        if (0 === strpos($pathinfo, '/js/72c84e6')) {
+            // _assetic_72c84e6
+            if ($pathinfo === '/js/72c84e6.js') {
+                return array (  '_controller' => 'assetic.controller:render',  'name' => '72c84e6',  'pos' => NULL,  '_format' => 'js',  '_route' => '_assetic_72c84e6',);
+            }
+
+            if (0 === strpos($pathinfo, '/js/72c84e6_part_1_')) {
+                // _assetic_72c84e6_0
+                if ($pathinfo === '/js/72c84e6_part_1_bootstrap.min_1.js') {
+                    return array (  '_controller' => 'assetic.controller:render',  'name' => '72c84e6',  'pos' => 0,  '_format' => 'js',  '_route' => '_assetic_72c84e6_0',);
+                }
+
+                // _assetic_72c84e6_1
+                if ($pathinfo === '/js/72c84e6_part_1_docs.min_2.js') {
+                    return array (  '_controller' => 'assetic.controller:render',  'name' => '72c84e6',  'pos' => 1,  '_format' => 'js',  '_route' => '_assetic_72c84e6_1',);
+                }
+
+                // _assetic_72c84e6_2
+                if ($pathinfo === '/js/72c84e6_part_1_ie10-viewport-bug-workaround_3.js') {
+                    return array (  '_controller' => 'assetic.controller:render',  'name' => '72c84e6',  'pos' => 2,  '_format' => 'js',  '_route' => '_assetic_72c84e6_2',);
+                }
+
+            }
+
+        }
+
+        if (0 === strpos($pathinfo, '/css/b9196ba')) {
+            // _assetic_b9196ba
+            if ($pathinfo === '/css/b9196ba.css') {
+                return array (  '_controller' => 'assetic.controller:render',  'name' => 'b9196ba',  'pos' => NULL,  '_format' => 'css',  '_route' => '_assetic_b9196ba',);
+            }
+
+            if (0 === strpos($pathinfo, '/css/b9196ba_part_1_')) {
+                // _assetic_b9196ba_0
+                if ($pathinfo === '/css/b9196ba_part_1_bootstrap.min_1.css') {
+                    return array (  '_controller' => 'assetic.controller:render',  'name' => 'b9196ba',  'pos' => 0,  '_format' => 'css',  '_route' => '_assetic_b9196ba_0',);
+                }
+
+                // _assetic_b9196ba_1
+                if ($pathinfo === '/css/b9196ba_part_1_cover_2.css') {
+                    return array (  '_controller' => 'assetic.controller:render',  'name' => 'b9196ba',  'pos' => 1,  '_format' => 'css',  '_route' => '_assetic_b9196ba_1',);
+                }
+
+                // _assetic_b9196ba_2
+                if ($pathinfo === '/css/b9196ba_part_1_signin_3.css') {
+                    return array (  '_controller' => 'assetic.controller:render',  'name' => 'b9196ba',  'pos' => 2,  '_format' => 'css',  '_route' => '_assetic_b9196ba_2',);
+                }
+
+            }
+
+        }
+
         if (0 === strpos($pathinfo, '/_')) {
             // _wdt
             if (0 === strpos($pathinfo, '/_wdt') && preg_match('#^/_wdt/(?P<token>[^/]++)$#s', $pathinfo, $matches)) {
@@ -124,23 +176,13 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         // user_information_user_homepage
         if (0 === strpos($pathinfo, '/hello') && preg_match('#^/hello/(?P<name>[^/]++)$#s', $pathinfo, $matches)) {
-            return $this->mergeDefaults(array_replace($matches, array('_route' => 'user_information_user_homepage')), array (  '_controller' => 'UserInformation\\UserBundle\\Controller\\DefaultController::indexAction',));
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'user_information_user_homepage')), array (  '_controller' => 'UserInformation\\UserBundle\\Controller\\SecuredController::indexAction',));
         }
 
-        // user_information_user_index
-        if (rtrim($pathinfo, '/') === '') {
-            if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
-                $allow = array_merge($allow, array('GET', 'HEAD'));
-                goto not_user_information_user_index;
-            }
-
-            if (substr($pathinfo, -1) !== '/') {
-                return $this->redirect($pathinfo.'/', 'user_information_user_index');
-            }
-
-            return array (  '_controller' => 'UserInformation\\UserBundle\\Controller\\SecuredController::indexAction',  '_route' => 'user_information_user_index',);
+        // user_information_user_login
+        if ($pathinfo === '/login') {
+            return array (  '_controller' => 'UserInformation\\UserBundle\\Controller\\SecuredController::loginAction',  '_route' => 'user_information_user_login',);
         }
-        not_user_information_user_index:
 
         // _welcome
         if (rtrim($pathinfo, '/') === '') {
