@@ -1,17 +1,13 @@
 <?php
 
-namespace UserInformation\UserBundle\Controller;
+namespace UserManagement\UserMgtBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 
-class SecuredController extends Controller
+class DefaultController extends Controller
 {
-    public function indexAction($name)
-    {
-        return $this->render('UserInformationUserBundle:Secured:index.html.twig', array('name' => $name));
-    }
-    public function loginAction()
+	public function loginAction()
     {
         $request = $this->getRequest();
         $session = $request->getSession();
@@ -27,12 +23,17 @@ class SecuredController extends Controller
         }
 
         return $this->render(
-            'UserInformationUserBundle:Secured:login.html.twig',
+            'UserManagementUserMgtBundle:Default:login.html.twig',
             array(
-                // last email entered by the user
-                'last_email' => $session->get(SecurityContext::LAST_EMAIL),
+                // last username entered by the user
+                'last_username' => $session->get(SecurityContext::LAST_USERNAME),
                 'error'         => $error,
             )
         );
+    }
+
+    public function indexAction($name)
+    {
+        return $this->render('UserManagementUserMgtBundle:Default:index.html.twig', array('name' => $name));
     }
 }

@@ -1,0 +1,7 @@
+parameters:
+#    user_management_user_mgt.example.class: UserManagement\UserMgtBundle\Example
+
+services:
+#    user_management_user_mgt.example:
+#        class: %user_management_user_mgt.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

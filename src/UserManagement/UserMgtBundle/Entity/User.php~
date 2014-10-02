@@ -1,13 +1,13 @@
 <?php
 
-namespace UserInformation\UserBundle\Entity;
+namespace UserManagement\UserMgtBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Table(name="users")
- * @ORM\Entity(repositoryClass="UserInformation\UserBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="UserManagement\UserMgtBundle\Entity\UserRepository")
  */
 class User implements UserInterface, \Serializable
 {
@@ -24,12 +24,12 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=60, unique=true)
      */
     private $fname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=60, unique=true)
      */
     private $lname;
 
@@ -54,12 +54,9 @@ class User implements UserInterface, \Serializable
         $this->salt = md5(uniqid(null, true));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getUsername()
     {
-        return $this->username;
+        return $this->email;
     }
 
     /**
@@ -124,75 +121,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set fname
-     *
-     * @param string $fname
-     * @return User
-     */
-    public function setFname($fname)
-    {
-        $this->fname = $fname;
-
-        return $this;
-    }
-
-    /**
-     * Get fname
-     *
-     * @return string 
-     */
-    public function getFname()
-    {
-        return $this->fname;
-    }
-
-    /**
-     * Set lname
-     *
-     * @param string $lname
-     * @return User
-     */
-    public function setLname($lname)
-    {
-        $this->lname = $lname;
-
-        return $this;
-    }
-
-    /**
-     * Get lname
-     *
-     * @return string 
-     */
-    public function getLname()
-    {
-        return $this->lname;
-    }
-
-    /**
      * Set salt
      *
      * @param string $salt
@@ -216,6 +144,29 @@ class User implements UserInterface, \Serializable
         $this->password = $password;
 
         return $this;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return User
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string 
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**

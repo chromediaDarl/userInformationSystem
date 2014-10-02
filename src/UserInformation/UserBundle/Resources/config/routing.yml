@@ -1,7 +1,0 @@
-user_information_user_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: UserInformationUserBundle:Secured:index }
-
-user_information_user_login:
-    path:     /login
-    defaults: { _controller: UserInformationUserBundle:Secured:login }

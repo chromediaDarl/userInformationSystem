@@ -1,13 +1,13 @@
 <?php
 
-namespace UserInformation\UserBundle\Entity;
+namespace UserManagement\UserMgtBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Table(name="users")
- * @ORM\Entity(repositoryClass="UserInformation\UserBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="UserManagement\UserMgtBundle\Entity\UserRepository")
  */
 class User implements UserInterface, \Serializable
 {
@@ -24,12 +24,12 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=60, unique=true)
      */
     private $fname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=60, unique=true)
      */
     private $lname;
 
@@ -54,12 +54,9 @@ class User implements UserInterface, \Serializable
         $this->salt = md5(uniqid(null, true));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getUsername()
     {
-        return $this->username;
+        return $this->email;
     }
 
     /**
@@ -124,6 +121,32 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
      * Set email
      *
      * @param string $email
@@ -144,6 +167,29 @@ class User implements UserInterface, \Serializable
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return User
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
     }
 
     /**
@@ -190,54 +236,5 @@ class User implements UserInterface, \Serializable
     public function getLname()
     {
         return $this->lname;
-    }
-
-    /**
-     * Set salt
-     *
-     * @param string $salt
-     * @return User
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     * @return User
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean 
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
     }
 }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,14 +12,13 @@
     <title>{% block title %}Welcome{% endblock %}</title>
 
     {% block stylesheets %}
-        {% stylesheets 'bundles/userinformationuser/css/*' filter='cssrewrite' %}
-            <link rel="stylesheet" href="{{ asset_url }}" />
-        {% endstylesheets %}
-    {% endblock %}
+	    {% stylesheets 'bundles/usermanagementusermgt/css/*' filter='cssrewrite' %}
+	        <link rel="stylesheet" href="{{ asset_url }}" />
+	    {% endstylesheets %}
+	{% endblock %}
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="http://getbootstrap.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="{{ asset('js/ie-emulation-modes-warning.js') }}" type="text/javascript"></script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -28,22 +28,15 @@
   </head>
 
   <body>
-
-    <div class="site-wrapper">
-
-      <div class="site-wrapper-inner">
-
-        <div class="cover-container">
-
-          <div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand">{% block blog_title %}Cover{% endblock %}</h3>
-              {% block navigation %}
-              <ul class="nav masthead-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Features</a></li>
-                <li><a href="#">Contact</a></li>
-              </ul>
-              {% endblock %}
-            </div>
-          </div>
+  {% block body %}{% endblock %}
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    {% block javascripts %}
+	    {% javascripts 'bundles/usermanagementusermgt/js/*' %}
+	        <script type="text/javascript" src="{{ asset_url }}"></script>
+	    {% endjavascripts %}
+	{% endblock %}
+  </body>
+</html>

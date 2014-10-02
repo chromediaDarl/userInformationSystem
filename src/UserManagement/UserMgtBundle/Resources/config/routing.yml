@@ -1,0 +1,18 @@
+user_management_user_mgt_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: UserManagementUserMgtBundle:Default:index }
+
+login_check:
+    path:   /login_check
+
+login:
+    pattern:   /login
+    defaults:  { _controller: UserManagementUserMgtBundle:Default:login }
+
+
+test_security:
+    pattern: /
+    defaults: {_controller: UserManagementUserMgtBundle:Default:index }
+
+logout:
+    pattern: /logout
