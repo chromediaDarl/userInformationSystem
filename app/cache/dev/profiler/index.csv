@@ -1,5 +1,0 @@
-d21509,127.0.0.1,GET,http://sample-login.local/app_dev.php/,1412154969,
-98aff7,127.0.0.1,GET,http://sample-login.local/app_dev.php/%7B%20asset('bundles/userinformationuser/js/ie10-viewport-bug-workaround.js')%20%7D%7D,1412154970,257be6
-4fba70,127.0.0.1,GET,http://sample-login.local/app_dev.php/%7B%20asset('bundles/userinformationuser/js/docs.min.js')%20%7D%7D,1412154970,9be6a7
-257be6,127.0.0.1,GET,http://sample-login.local/app_dev.php/%7B%20asset('bundles/userinformationuser/js/ie10-viewport-bug-workaround.js')%20%7D%7D,1412154970,
-9be6a7,127.0.0.1,GET,http://sample-login.local/app_dev.php/%7B%20asset('bundles/userinformationuser/js/docs.min.js')%20%7D%7D,1412154970,
