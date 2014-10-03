@@ -1,4 +1,4 @@
-user_information_user:
-    resource: "@UserInformationUserBundle/Resources/config/routing.yml"
+user_management_user_mgt:
+    resource: "@UserManagementUserMgtBundle/Resources/config/routing.yml"
     prefix:   /
 

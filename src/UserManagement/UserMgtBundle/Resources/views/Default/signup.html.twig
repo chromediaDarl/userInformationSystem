@@ -1,0 +1,26 @@
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/login.html.twig #}
+{% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
+{% block body %}
+<div class="container">
+	<form action="{{ path('signup') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
+		<h2 class="form-signin-heading">{% block title %}Sign Up{% endblock %}</h2>
+		{% for flashMessage in app.session.flashbag.get('alert-danger') %}
+			<div class="alert alert-danger" role="alert">
+			{{ flashMessage }}
+			</div> 
+		{% endfor %}
+        {{ form_row(form.fname) }}
+        {{ form_row(form.lname) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+        {{ form_row(form.conpassword) }}
+
+        {{ form_rest(form) }}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+	    <p class="space">
+		    <a href="{{ path('login') }}"><span class="f-left">&laquo; Back to login page</span></a>
+		</p>
+    </form>
+</div> <!-- /container -->
+{% endblock %}

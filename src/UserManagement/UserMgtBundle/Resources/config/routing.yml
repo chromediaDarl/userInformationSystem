@@ -1,18 +1,23 @@
 user_management_user_mgt_homepage:
-    path:     /hello/{name}
+    path:     /
     defaults: { _controller: UserManagementUserMgtBundle:Default:index }
 
 login_check:
-    path:   /login_check
+    path:   /user/login_check
 
 login:
     pattern:   /login
     defaults:  { _controller: UserManagementUserMgtBundle:Default:login }
 
-
 test_security:
-    pattern: /
+    pattern: /user
     defaults: {_controller: UserManagementUserMgtBundle:Default:index }
 
 logout:
-    pattern: /logout
+    pattern: /user/logout
+
+signup:
+    pattern:   /signup
+    defaults:  { _controller: UserManagementUserMgtBundle:Default:signup }
+    requirements:
+        _method:  GET|POST

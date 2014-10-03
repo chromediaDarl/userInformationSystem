@@ -2,16 +2,29 @@
 {% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
 {% block body %}
 <div class="container">
-
-  <form class="form-signin" role="form">
-    <h2 class="form-signin-heading">Please sign in</h2>
-    <input type="email" class="form-control" placeholder="Email address" required autofocus>
-    <input type="password" class="form-control" placeholder="Password" required>
-    <label class="checkbox">
-      <input type="checkbox" value="remember-me"> Remember me
-    </label>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-  </form>
+	<form action="{{ path('login_check') }}" method="post" class="form-signin" role="form">
+		{% for flashMessage in app.session.flashbag.get('alert-success') %}
+			<div class="alert alert-success" role="alert">
+			{{ flashMessage }}
+			</div> 
+		{% endfor %}
+		<h2 class="form-signin-heading">{% block title %}Sign In{% endblock %}</h2>
+		{% if error %}
+		    <div class="alert alert-danger" role="alert">{{ error.message }}</div>
+		{% endif %}
+	    <input type="email" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Email address" required autofocus />
+	    <input type="password" class="form-control" id="password" name="_password" placeholder="Password" required>
+	    {#
+	        If you want to control the URL the user
+	        is redirected to on success (more details below)
+	        <input type="hidden" name="_target_path" value="/account" />
+	    #}
+	    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+	    <p class="space">
+		    <a href="{{ path('signup') }}"><span class="f-left">New here? Sign Up Now!</span></a>
+			<a href="#"><span class="f-right">Forgot your password?</span></a>
+		</p>
+	</form>
 
 </div> <!-- /container -->
 {% endblock %}

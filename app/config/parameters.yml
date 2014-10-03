@@ -1,1 +1,19 @@
-{ parameters: { database_driver: pdo_mysql, database_host: 127.0.0.1, database_port: null, database_name: sample-login, database_user: root, database_password: null, mailer_transport: smtp, mailer_host: 127.0.0.1, mailer_user: null, mailer_password: null, locale: en, secret: b77ef3b36c1c5828ee2e8a61d8eb8f5b23885648, debug_toolbar: true, debug_redirects: false, use_assetic_controller: true, database_path: null } }
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: usermgtdb
+    database_user: root
+    database_password: root
+    mailer_transport: gmail
+    mailer_encryption: ssl
+    mailer_auth_mode: login
+    mailer_host: smtp.gmail.com
+    mailer_user: kimberlydarl.barbadillo@chromdedia.com
+    mailer_password: hopelessly123
+    locale: en
+    secret: b77ef3b36c1c5828ee2e8a61d8eb8f5b23885648
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: true

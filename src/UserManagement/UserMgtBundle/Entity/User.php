@@ -4,6 +4,10 @@ namespace UserManagement\UserMgtBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @ORM\Table(name="users")
@@ -39,20 +43,16 @@ class User implements UserInterface, \Serializable
     private $salt;
 
     /**
-     * @ORM\Column(type="string", length=40)
+     * @ORM\Column(type="string", length=255)
      */
     private $password;
+
+    private $conpassword;
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
-
-    public function __construct()
-    {
-        $this->isActive = true;
-        $this->salt = md5(uniqid(null, true));
-    }
 
     public function getUsername()
     {
@@ -73,6 +73,14 @@ class User implements UserInterface, \Serializable
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConPassword()
+    {
+        return $this->conpassword;
     }
 
     /**
@@ -142,6 +150,19 @@ class User implements UserInterface, \Serializable
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setConPassword($conpassword)
+    {
+        $this->conpassword = $conpassword;
 
         return $this;
     }
@@ -236,5 +257,18 @@ class User implements UserInterface, \Serializable
     public function getLname()
     {
         return $this->lname;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('fname', new NotBlank());
+
+        $metadata->addPropertyConstraint('lname', new NotBlank());
+
+        $metadata->addPropertyConstraint('email', new Email());
+
+        $metadata->addPropertyConstraint('password', new NotBlank());
+
+        $metadata->addPropertyConstraint('conpassword', new NotBlank());
     }
 }
