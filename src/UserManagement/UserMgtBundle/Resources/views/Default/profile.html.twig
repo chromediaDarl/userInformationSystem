@@ -1,0 +1,49 @@
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/profile.html.twig #}
+{% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
+{% block body %}
+<div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          {% include 'UserManagementUserMgtBundle::mainnav.html.twig' %}
+
+          <div class="inner cover">
+            <h1 class="cover-heading">
+              {% block title %}Your Profile{% endblock %}
+            </h1>
+            <form action="{{ path('profile') }}" method="post" class="form-signup" role="form">
+            	{% for flashMessage in app.session.flashbag.get('alert') %}
+					<div class="alert alert-success" role="alert">
+					{{ flashMessage }}
+					</div> 
+				{% endfor %}
+			    {{ form_row(form.email) }}
+			    {{ form_row(form.fname) }}
+				{{ form_row(form.lname) }}
+			    
+			    {#
+			        If you want to control the URL the user
+			        is redirected to on success (more details below)
+			        <input type="hidden" name="_target_path" value="/account" />
+			    #}
+			    <button class="btn btn-lg btn-primary btn-block" type="submit">Update Profile</button>
+			    <p class="space">
+				    <a href="#"><span class="f-right">Want to change your password?</span></a>
+				</p>
+			</form>
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}
