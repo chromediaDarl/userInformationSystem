@@ -64,8 +64,8 @@ class DefaultController extends Controller
                 $email = $form["email"]->getData();
                 $fname = $form["fname"]->getData();
                 $lname = $form["lname"]->getData();
-                $pass = $form["password_first"]->getData();
-                $cpass = $form["password_second"]->getData();
+                $pass = $form["password"]->getData();
+                $cpass = $form["conpassword"]->getData();
 
                 if ( $pass != $cpass){
                     $this->get('session')->getFlashBag()->add('alert-danger', 'Password mismatch');
