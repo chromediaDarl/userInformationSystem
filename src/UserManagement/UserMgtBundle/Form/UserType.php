@@ -17,7 +17,7 @@ class UserType extends AbstractType
         $builder->add('lname', 'text', array('constraints' => array( new NotBlank(array('message' => 'Last Name is requuired'))),'label' => false , 'attr' => array('placeholder' => 'Last Name', 'class' => 'form-control')));
         $builder->add('email', 'email', array('constraints' => array( new Email(array('message' => 'Invalid email'))),'label' => false , 'attr' => array('placeholder' => 'Email Address', 'class' => 'form-control')));
         $builder->add('password', 'password', array(
-            'constraints' => array( new NotBlank(array('message' => 'Password is requuired'))),
+            'constraints' => array( new Length(array('min'=> 6, 'minMessage' => 'New Password must be at least {{ limit }} characters long'))),
             'label' => false , 'attr' => array('placeholder' => 'Password', 'class' => 'form-control')));
         $builder->add('conpassword', 'password', array('label' => false , 'attr' => array('placeholder' => 'Confirm Password', 'class' => 'form-control')));
     }
