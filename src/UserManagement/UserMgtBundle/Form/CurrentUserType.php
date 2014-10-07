@@ -5,6 +5,7 @@ namespace UserManagement\UserMgtBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CurrentUserType extends AbstractType
 {

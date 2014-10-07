@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use UserManagement\UserMgtBundle\Entity\User;
 use UserManagement\UserMgtBundle\Form\UserType;
 use UserManagement\UserMgtBundle\Form\CurrentUserType;
+use UserManagement\UserMgtBundle\Form\ChangePassType;
 
 class DefaultController extends Controller
 {
@@ -63,11 +64,12 @@ class DefaultController extends Controller
                 $email = $form["email"]->getData();
                 $fname = $form["fname"]->getData();
                 $lname = $form["lname"]->getData();
-                $pass = $form["password"]->getData();
-                $cpass = $form["conpassword"]->getData();
+                $pass = $form["password_first"]->getData();
+                $cpass = $form["password_second"]->getData();
 
                 if ( $pass != $cpass){
                     $this->get('session')->getFlashBag()->add('alert-danger', 'Password mismatch');
+                    return $this->redirect($this->generateUrl('signup'));
                 }
                 else{
                     $user->setEmail($email);
@@ -80,13 +82,9 @@ class DefaultController extends Controller
 
                     $em->persist($user);
                     $em->flush();
+                    $this->get('session')->getFlashBag()->add('alert-success', 'You have successfully created your account. Please click the link sent to your mailbox for account confirmation. Thank you.');
+                    return $this->redirect($this->generateUrl('login'));
                 }
-                // Perform some action, such as sending an email
-
-                // Redirect - This is important to prevent users re-posting
-                // the form if they refresh the page
-                $this->get('session')->getFlashBag()->add('alert-success', 'You have successfully created your account. Please click the link sent to your mailbox for account confirmation. Thank you.');
-                return $this->redirect($this->generateUrl('login'));
             }
         }
 
@@ -107,23 +105,56 @@ class DefaultController extends Controller
             if ($form->isValid()) {
                 $fname = $form["fname"]->getData();
                 $lname = $form["lname"]->getData();
-                echo '<pre>Last Name: '.var_dump($lname).'</pre>';
-                echo '<pre>First Name: '.var_dump($fname).'</pre>';
-                exit;
                 $currentUser->setFname($fname);
                 $currentUser->setLname($lname);
 
                 $em->persist($currentUser);
                 $em->flush();
+                $this->get('session')->getFlashBag()->add('alert', 'Successfully updated profile.');
+                return $this->redirect($this->generateUrl('profile'));
             }
             else{
                 foreach ($form->getErrors() as $er) {
-                	var_dump($er);
-                	exit;
+                	$er;
                 }
+                $this->get('session')->getFlashBag()->add('alert', $er);
+                return $this->redirect($this->generateUrl('profile'));
             }
 
         }
         return $this->render('UserManagementUserMgtBundle:Default:profile.html.twig', array('form' => $form->createView()));
+    }
+    public function changepassAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $currentUser = $this->getUser();
+
+        $form = $this->createForm(new ChangePassType(), $currentUser);
+
+        if ($request->getMethod() == 'POST') {
+            $form->submit($request);
+            if ($form->isValid()) {
+                $pass = $form["password"]->getData();
+                var_dump($pass);
+                exit;
+                $encoder = $this->container->get('security.encoder_factory')->getEncoder($currentUser);
+                $user->setPassword($encoder->encodePassword($pass, $currentUser->getSalt()));
+
+                $em->persist($currentUser);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('alert', 'Successfully changed password.');
+                return $this->redirect($this->generateUrl('changepass'));
+            }
+            else{
+                foreach ($form->getErrors() as $er) {
+                    $this->get('session')->getFlashBag()->add('alert',$er);
+                    return $this->redirect($this->generateUrl('changepass'));
+                }
+            }
+
+        }
+        return $this->render('UserManagementUserMgtBundle:Default:changepass.html.twig', array('form' => $form->createView()));
     }
 }

@@ -1,4 +1,4 @@
-{# src/UserManagement/UserMgtBundle/Resources/views/Default/profile.html.twig #}
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/changepass.html.twig #}
 {% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
 {% block body %}
 <div class="site-wrapper">
@@ -11,18 +11,19 @@
 
           <div class="inner cover">
             <h1 class="cover-heading">
-              {% block title %}Your Profile{% endblock %}
+              {% block title %}Change Password{% endblock %}
             </h1>
             <form action="{{ path('profile') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
             	{% for flashMessage in app.session.flashbag.get('alert') %}
-					<div class="alert alert-success" role="alert">
-					{{ flashMessage }}
-					{{ form_errors(form) }}
-					</div> 
-				{% endfor %}
-			    {{ form_row(form.email) }}
-			    {{ form_row(form.fname) }}
-				{{ form_row(form.lname) }}
+      					<div class="alert alert-success" role="alert">
+      					{{ flashMessage }}
+                {{ form_errors(form) }}
+      					</div> 
+      				{% endfor %}
+      				{{ form_errors(form) }}
+
+      			    {{ form_row(form.password) }}
+      			    {{ form_row(form.conpassword) }}
 			    
 			    {{ form_rest(form) }}
 			    {#
@@ -30,10 +31,7 @@
 			        is redirected to on success (more details below)
 			        <input type="hidden" name="_target_path" value="/account" />
 			    #}
-			    <button class="btn btn-lg btn-primary btn-block" type="submit">Update Profile</button>
-			    <p class="space">
-				    <a href="change-password"><span class="f-right">Want to change your password?</span></a>
-				</p>
+			    <button class="btn btn-lg btn-primary btn-block" type="submit">Update Password</button>
 			</form>
           </div>
 

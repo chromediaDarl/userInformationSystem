@@ -27,3 +27,9 @@ profile:
     defaults: {_controller: UserManagementUserMgtBundle:Default:profile }
     requirements:
         _method:  GET|POST
+
+changepass:
+    pattern: /user/change-password
+    defaults: {_controller: UserManagementUserMgtBundle:Default:changepass }
+    requirements:
+        _method:  GET|POST
