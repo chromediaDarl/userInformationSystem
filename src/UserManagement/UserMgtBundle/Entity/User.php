@@ -5,6 +5,7 @@ namespace UserManagement\UserMgtBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="users")
@@ -46,6 +47,10 @@ class User implements UserInterface, \Serializable
 
     private $conpassword;
 
+    private $newpassword;
+
+    private $connewpassword;
+
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
@@ -78,6 +83,22 @@ class User implements UserInterface, \Serializable
     public function getConPassword()
     {
         return $this->conpassword;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNewPassword()
+    {
+        return $this->newpassword;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConNewPassword()
+    {
+        return $this->connewpassword;
     }
 
     /**
@@ -152,7 +173,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set password
+     * Set confirm password
      *
      * @param string $password
      * @return User
@@ -163,6 +184,33 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
+
+    /**
+     * Set confirm password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setNewPassword($newpassword)
+    {
+        $this->newpassword = $newpassword;
+
+        return $this;
+    }
+
+    /**
+     * Set confirm new password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setConNewPassword($connewpassword)
+    {
+        $this->connewpassword = $connewpassword;
+
+        return $this;
+    }
+
 
     /**
      * Set email
@@ -256,16 +304,11 @@ class User implements UserInterface, \Serializable
         return $this->lname;
     }
 
-//     public static function loadValidatorMetadata(ClassMetadata $metadata)
-//     {
-//         $metadata->addPropertyConstraint('fname', new NotBlank());
-
-//         $metadata->addPropertyConstraint('lname', new NotBlank());
-
-//         $metadata->addPropertyConstraint('email', new Email());
-
-//         $metadata->addPropertyConstraint('password', new NotBlank());
-
-//         $metadata->addPropertyConstraint('conpassword', new NotBlank());
-//     }
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addConstraint(new UniqueEntity(array(
+            'fields'  => 'email',
+            'message'   => 'This email address is already in use',
+        )));
+    }
 }

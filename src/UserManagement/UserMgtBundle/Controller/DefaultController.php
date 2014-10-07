@@ -14,7 +14,7 @@ use UserManagement\UserMgtBundle\Form\ChangePassType;
 
 class DefaultController extends Controller
 {
-	public function loginAction(Request $request)
+    public function loginAction(Request $request)
     {
 
         $session = $request->getSession();
@@ -129,6 +129,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $currentUser = $this->getUser();
+        $curPass = $currentUser->getPassword();
 
         $form = $this->createForm(new ChangePassType(), $currentUser);
 
@@ -136,16 +137,32 @@ class DefaultController extends Controller
             $form->submit($request);
             if ($form->isValid()) {
                 $pass = $form["password"]->getData();
-                var_dump($pass);
-                exit;
                 $encoder = $this->container->get('security.encoder_factory')->getEncoder($currentUser);
-                $user->setPassword($encoder->encodePassword($pass, $currentUser->getSalt()));
+                $pass = $encoder->encodePassword($pass, $currentUser->getSalt());
+                //var_dump($curPass);
+                //var_dump($pass);
+                //exit;
+                $newpass = $form["newpassword"]->getData();
+                $cnpass = $form["connewpassword"]->getData();
 
-                $em->persist($currentUser);
-                $em->flush();
+                if ($pass != $curPass){
+                    $this->get('session')->getFlashBag()->add('alert', 'Incorrect current password');
+                    return $this->redirect($this->generateUrl('changepass'));
+                }
+                elseif ( $newpass != $cnpass){
+                    $this->get('session')->getFlashBag()->add('alert', 'Password mismatch');
+                    return $this->redirect($this->generateUrl('changepass'));
+                }
+                else{
+                    $encoder = $this->container->get('security.encoder_factory')->getEncoder($currentUser);
+                    $currentUser->setPassword($encoder->encodePassword($newpass, $currentUser->getSalt()));
 
-                $this->get('session')->getFlashBag()->add('alert', 'Successfully changed password.');
-                return $this->redirect($this->generateUrl('changepass'));
+                    $em->persist($currentUser);
+                    $em->flush();
+
+                    $this->get('session')->getFlashBag()->add('alert', 'Successfully changed password.');
+                    return $this->redirect($this->generateUrl('changepass'));
+                }
             }
             else{
                 foreach ($form->getErrors() as $er) {

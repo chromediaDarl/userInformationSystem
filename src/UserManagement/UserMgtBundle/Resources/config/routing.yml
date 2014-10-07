@@ -1,6 +1,6 @@
 user_management_user_mgt_homepage:
     path:     /
-    defaults: { _controller: UserManagementUserMgtBundle:Default:index }
+    defaults: { _controller: UserManagementUserMgtBundle:Default:login }
 
 login_check:
     path:   /user/login_check

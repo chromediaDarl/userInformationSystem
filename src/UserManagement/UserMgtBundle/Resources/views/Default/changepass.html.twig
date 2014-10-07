@@ -13,7 +13,7 @@
             <h1 class="cover-heading">
               {% block title %}Change Password{% endblock %}
             </h1>
-            <form action="{{ path('profile') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
+            <form action="{{ path('changepass') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
             	{% for flashMessage in app.session.flashbag.get('alert') %}
       					<div class="alert alert-success" role="alert">
       					{{ flashMessage }}
@@ -23,7 +23,8 @@
       				{{ form_errors(form) }}
 
       			    {{ form_row(form.password) }}
-      			    {{ form_row(form.conpassword) }}
+                {{ form_row(form.newpassword) }}
+      			    {{ form_row(form.connewpassword) }}
 			    
 			    {{ form_rest(form) }}
 			    {#
