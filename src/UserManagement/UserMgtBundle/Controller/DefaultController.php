@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 // Import new namespaces
 use UserManagement\UserMgtBundle\Entity\User;
 use UserManagement\UserMgtBundle\Form\UserType;
+use UserManagement\UserMgtBundle\Form\CurrentUserType;
 
 class DefaultController extends Controller
 {
@@ -44,7 +45,7 @@ class DefaultController extends Controller
 
     public function indexAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
         return $this->render('UserManagementUserMgtBundle:Default:index.html.twig', array('user' => $user));
     }
 
@@ -92,5 +93,36 @@ class DefaultController extends Controller
         return $this->render('UserManagementUserMgtBundle:Default:signup.html.twig', array(
             'form' => $form->createView()
         ));
+    }
+    public function profileAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $currentUser = $this->getUser();
+    
+        $form = $this->createForm(new CurrentUserType(), $currentUser);
+
+        if ($request->getMethod() == 'POST') {
+            $form->submit($request);
+            if ($form->isValid()) {
+                $fname = $form["fname"]->getData();
+                $lname = $form["lname"]->getData();
+                echo '<pre>Last Name: '.var_dump($lname).'</pre>';
+                echo '<pre>First Name: '.var_dump($fname).'</pre>';
+                exit;
+                $currentUser->setFname($fname);
+                $currentUser->setLname($lname);
+
+                $em->persist($currentUser);
+                $em->flush();
+            }
+            else{
+                var_dump('form invalid');
+            }
+            exit;
+            $this->get('session')->getFlashBag()->add('alert', 'You have successfully updated your profile.');
+            return $this->redirect($this->generateUrl('profile'));
+        }
+        return $this->render('UserManagementUserMgtBundle:Default:profile.html.twig', array('form' => $form->createView()));
     }
 }

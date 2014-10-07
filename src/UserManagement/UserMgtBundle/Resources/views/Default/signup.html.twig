@@ -1,10 +1,10 @@
-{# src/UserManagement/UserMgtBundle/Resources/views/Default/login.html.twig #}
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/signup.html.twig #}
 {% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
 {% block body %}
 <div class="container">
 	<form action="{{ path('signup') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
 		<h2 class="form-signin-heading">{% block title %}Sign Up{% endblock %}</h2>
-		{% for flashMessage in app.session.flashbag.get('alert-danger') %}
+	    {% for flashMessage in app.session.flashbag.get('alert-danger') %}
 			<div class="alert alert-danger" role="alert">
 			{{ flashMessage }}
 			</div> 

@@ -9,7 +9,7 @@ login:
     pattern:   /login
     defaults:  { _controller: UserManagementUserMgtBundle:Default:login }
 
-test_security:
+home:
     pattern: /user
     defaults: {_controller: UserManagementUserMgtBundle:Default:index }
 
@@ -19,5 +19,11 @@ logout:
 signup:
     pattern:   /signup
     defaults:  { _controller: UserManagementUserMgtBundle:Default:signup }
+    requirements:
+        _method:  GET|POST
+
+profile:
+    pattern: /user/profile
+    defaults: {_controller: UserManagementUserMgtBundle:Default:profile }
     requirements:
         _method:  GET|POST
