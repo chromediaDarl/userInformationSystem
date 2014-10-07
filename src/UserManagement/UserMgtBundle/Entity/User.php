@@ -121,7 +121,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -183,7 +183,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -206,7 +206,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get isActive
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsActive()
     {
@@ -229,7 +229,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get fname
      *
-     * @return string 
+     * @return string
      */
     public function getFname()
     {
@@ -252,23 +252,23 @@ class User implements UserInterface, \Serializable
     /**
      * Get lname
      *
-     * @return string 
+     * @return string
      */
     public function getLname()
     {
         return $this->lname;
     }
 
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraint('fname', new NotBlank());
+//     public static function loadValidatorMetadata(ClassMetadata $metadata)
+//     {
+//         $metadata->addPropertyConstraint('fname', new NotBlank());
 
-        $metadata->addPropertyConstraint('lname', new NotBlank());
+//         $metadata->addPropertyConstraint('lname', new NotBlank());
 
-        $metadata->addPropertyConstraint('email', new Email());
+//         $metadata->addPropertyConstraint('email', new Email());
 
-        $metadata->addPropertyConstraint('password', new NotBlank());
+//         $metadata->addPropertyConstraint('password', new NotBlank());
 
-        $metadata->addPropertyConstraint('conpassword', new NotBlank());
-    }
+//         $metadata->addPropertyConstraint('conpassword', new NotBlank());
+//     }
 }

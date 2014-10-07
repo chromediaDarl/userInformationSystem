@@ -65,7 +65,7 @@ class DefaultController extends Controller
                 $lname = $form["lname"]->getData();
                 $pass = $form["password"]->getData();
                 $cpass = $form["conpassword"]->getData();
-                
+
                 if ( $pass != $cpass){
                     $this->get('session')->getFlashBag()->add('alert-danger', 'Password mismatch');
                 }
@@ -99,7 +99,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $currentUser = $this->getUser();
-    
+
         $form = $this->createForm(new CurrentUserType(), $currentUser);
 
         if ($request->getMethod() == 'POST') {
@@ -117,11 +117,12 @@ class DefaultController extends Controller
                 $em->flush();
             }
             else{
-                var_dump('form invalid');
+                foreach ($form->getErrors() as $er) {
+                	var_dump($er);
+                	exit;
+                }
             }
-            exit;
-            $this->get('session')->getFlashBag()->add('alert', 'You have successfully updated your profile.');
-            return $this->redirect($this->generateUrl('profile'));
+
         }
         return $this->render('UserManagementUserMgtBundle:Default:profile.html.twig', array('form' => $form->createView()));
     }
