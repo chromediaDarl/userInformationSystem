@@ -1,6 +1,6 @@
 user_management_user_mgt_homepage:
     path:     /
-    defaults: { _controller: UserManagementUserMgtBundle:Default:login }
+    defaults: { _controller: UserManagementUserMgtBundle:Default:welcome }
 
 login_check:
     path:   /user/login_check
@@ -31,5 +31,17 @@ profile:
 changepass:
     pattern: /user/change-password
     defaults: {_controller: UserManagementUserMgtBundle:Default:changepass }
+    requirements:
+        _method:  GET|POST
+
+confirm:
+    pattern: /confirm/{key}/{date}
+    defaults: {_controller: UserManagementUserMgtBundle:Default:confirmAccount}
+    requirements:
+        _method:  GET|POST
+
+forgotpass:
+    pattern:   /forgotpass
+    defaults:  { _controller: UserManagementUserMgtBundle:Default:forgotpass }
     requirements:
         _method:  GET|POST

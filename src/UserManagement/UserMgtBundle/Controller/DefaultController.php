@@ -8,12 +8,18 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 // Import new namespaces
 use UserManagement\UserMgtBundle\Entity\User;
+use UserManagement\UserMgtBundle\Entity\Confirm;
 use UserManagement\UserMgtBundle\Form\UserType;
 use UserManagement\UserMgtBundle\Form\CurrentUserType;
 use UserManagement\UserMgtBundle\Form\ChangePassType;
 
 class DefaultController extends Controller
 {
+    public function welcomeAction()
+    {
+        $user = $this->getUser();
+        return $this->render('UserManagementUserMgtBundle:Default:welcome.html.twig', array('user' => $user));
+    }
     public function loginAction(Request $request)
     {
 
@@ -27,9 +33,13 @@ class DefaultController extends Controller
         } elseif (null !== $session && $session->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
             $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
             $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
-        } else {
+        }else {
             $error = '';
         }
+
+        //if (!$this->getIsActive()){
+            //$error = 'Please confirm your email address first to activate your account';
+        //} 
 
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
@@ -81,7 +91,28 @@ class DefaultController extends Controller
                     $user->setPassword($encoder->encodePassword($pass, $user->getSalt()));
 
                     $em->persist($user);
+                    
+                    //Confirmation Email Table
+                    $confirm = new Confirm();
+                    $confirm = $confirm->setUser($user);
+                    $confirm->setEmail($email);
+                    $confirm->setUserid($user->getId());
+                    $key = md5(uniqid($email));
+                    $date = date("m.d.y");
+                    $confirm->setKey($key);
+                    $confirm->setIsConfirmed(0);
+                    $url = $this->generateUrl('confirm', array('key' => $key, 'date' => $date ));
+
+                    $em->persist($confirm);
                     $em->flush();
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('Email Confirmation')
+                        ->setFrom('kimberlydarl.barbadillo@chromedia.com')
+                        ->setTo($email)
+                        ->setBody($this->renderView('BloggerBlogBundle:Page:confirmEmail.html.twig', array('confirm' => $confirm, 'user' => $user, 'url' => $url)));
+                    $this->get('mailer')->send($message);
+
                     $this->get('session')->getFlashBag()->add('alert-success', 'You have successfully created your account. Please click the link sent to your mailbox for account confirmation. Thank you.');
                     return $this->redirect($this->generateUrl('login'));
                 }
@@ -92,6 +123,13 @@ class DefaultController extends Controller
             'form' => $form->createView()
         ));
     }
+
+    public function confirmAccountAction($key,$date)
+    {
+        $user = $this->getUser();
+        return $this->render('UserManagementUserMgtBundle:Default:confirmAccount.html.twig', array('user' => $user));
+    }
+
     public function profileAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -173,5 +211,10 @@ class DefaultController extends Controller
 
         }
         return $this->render('UserManagementUserMgtBundle:Default:changepass.html.twig', array('form' => $form->createView()));
+    }
+    public function forgotPassAction()
+    {
+
+        return $this->render('UserManagementUserMgtBundle:Default:forgotpass.html.twig', array());
     }
 }

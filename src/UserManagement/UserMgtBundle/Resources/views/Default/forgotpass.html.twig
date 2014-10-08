@@ -1,0 +1,23 @@
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/forgotpass.html.twig #}
+{% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
+{% block body %}
+<div class="container">
+	<form action="{{ path('login_check') }}" method="post" class="form-signin" role="form">
+		{% for flashMessage in app.session.flashbag.get('alert-success') %}
+			<div class="alert alert-success" role="alert">
+			{{ flashMessage }}
+			</div> 
+		{% endfor %}
+		<h2 class="form-signin-heading">{% block title %}Forgot Password{% endblock %}</h2>
+		{#{% if error %}
+		    <div class="alert alert-danger" role="alert">{{ error.message }}</div>
+		{% endif %}#}
+	    <input type="email" id="username" name="_username" class="form-control" placeholder="Email address" required autofocus />
+	    <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+	    <p class="space">
+		    <a href="{{ path('login') }}"><span class="f-left">&laquo; Back to login page</span></a>
+		</p>
+	</form>
+
+</div> <!-- /container -->
+{% endblock %}
