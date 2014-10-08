@@ -23,13 +23,11 @@ class Confirm
     private $email;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    /**
+     * @var User
      * @ORM\ManyToOne(targetEntity="User", inversedBy="id")
      * @ORM\JoinColumn(name="userid", referencedColumnName="id")
      */
-    private $userid;
+    private $user;
 
     /**
      * @ORM\Column(type="string", length=128)
@@ -44,7 +42,7 @@ class Confirm
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -67,34 +65,11 @@ class Confirm
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * Set userid
-     *
-     * @param integer $userid
-     * @return Confirm
-     */
-    public function setUserid($userid)
-    {
-        $this->userid = $userid;
-
-        return $this;
-    }
-
-    /**
-     * Get userid
-     *
-     * @return integer 
-     */
-    public function getUserid()
-    {
-        return $this->userid;
     }
 
     /**
@@ -113,7 +88,7 @@ class Confirm
     /**
      * Get key
      *
-     * @return string 
+     * @return string
      */
     public function getKey()
     {
