@@ -3,8 +3,8 @@
 {% block body %}
 <div class="container">
 	<form action="{{ path('login_check') }}" method="post" class="form-signin" role="form">
-		{% for flashMessage in app.session.flashbag.get('alert-success') %}
-			<div class="alert alert-success" role="alert">
+		{% for flashMessage in app.session.flashbag.get('alert') %}
+			<div class="alert alert-danger" role="alert">
 			{{ flashMessage }}
 			</div> 
 		{% endfor %}

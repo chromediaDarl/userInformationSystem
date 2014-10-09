@@ -96,22 +96,22 @@ class DefaultController extends Controller
                     $confirm = new Confirm();
                     $confirm = $confirm->setUser($user);
                     $confirm->setEmail($email);
-                    $confirm->setUserid($user->getId());
                     $key = md5(uniqid($email));
                     $date = date("m.d.y");
-                    $confirm->setKey($key);
+                    $confirm->setConfirmKey($key);
                     $confirm->setIsConfirmed(0);
                     $url = $this->generateUrl('confirm', array('key' => $key, 'date' => $date ));
 
                     $em->persist($confirm);
-                    $em->flush();
 
                     $message = \Swift_Message::newInstance()
                         ->setSubject('Email Confirmation')
                         ->setFrom('kimberlydarl.barbadillo@chromedia.com')
                         ->setTo($email)
-                        ->setBody($this->renderView('BloggerBlogBundle:Page:confirmEmail.html.twig', array('confirm' => $confirm, 'user' => $user, 'url' => $url)));
+                        ->setBody($this->renderView('UserManagementUserMgtBundle:Default:confirmEmail.html.twig', array('confirm' => $confirm, 'user' => $user, 'url' => $url)));
                     $this->get('mailer')->send($message);
+
+                    $em->flush();
 
                     $this->get('session')->getFlashBag()->add('alert-success', 'You have successfully created your account. Please click the link sent to your mailbox for account confirmation. Thank you.');
                     return $this->redirect($this->generateUrl('login'));
@@ -214,6 +214,20 @@ class DefaultController extends Controller
     }
     public function forgotPassAction()
     {
+        if ($request->getMethod() == 'POST') {
+            $form->submit($request);
+            if ($form->isValid()) {
+                $email = $form["email"]->getData();
+
+                $user = $this->getDoctrine()
+                    ->getRepository('UserMgtBundle:User')
+                    ->findOneBy(array('email' => $email));
+                if(!$user){
+                    $this->get('session')->getFlashBag()->add('alert', 'Password mismatch');
+                    return $this->redirect($this->generateUrl('forgotpass'));
+                }
+            }
+        }
 
         return $this->render('UserManagementUserMgtBundle:Default:forgotpass.html.twig', array());
     }

@@ -30,9 +30,9 @@ class Confirm
     private $user;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(type="string", length=255)
      */
-    private $key;
+    private $confirmkey;
 
     /**
      * @ORM\Column(name="is_confirmed", type="boolean")
@@ -73,26 +73,26 @@ class Confirm
     }
 
     /**
-     * Set key
+     * Set confirmkey
      *
-     * @param string $key
+     * @param string $confirmkey
      * @return Confirm
      */
-    public function setKey($key)
+    public function setConfirmKey($confirmkey)
     {
-        $this->key = $key;
+        $this->confirmkey = $confirmkey;
 
         return $this;
     }
 
     /**
-     * Get key
+     * Get confirmkey
      *
      * @return string
      */
-    public function getKey()
+    public function getConfirmKey()
     {
-        return $this->key;
+        return $this->confirmkey;
     }
 
     /**
@@ -116,5 +116,28 @@ class Confirm
     public function getIsConfirmed()
     {
         return $this->isConfirmed;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \UserManagement\UserMgtBundle\Entity\User $user
+     * @return Confirm
+     */
+    public function setUser(\UserManagement\UserMgtBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \UserManagement\UserMgtBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
