@@ -14,12 +14,17 @@
               {% block title %}Your Profile{% endblock %}
             </h1>
             <form action="{{ path('profile') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
-            	{% for flashMessage in app.session.flashbag.get('alert') %}
+            	{% for flashMessage in app.session.flashbag.get('alert-danger') %}
+  					<div class="alert alert-danger" role="alert">
+  					{{ flashMessage }}
+  					</div> 
+  				{% endfor %}
+            	{% for flashMessage in app.session.flashbag.get('alert-success') %}
 					<div class="alert alert-success" role="alert">
 					{{ flashMessage }}
-					{{ form_errors(form) }}
 					</div> 
 				{% endfor %}
+				{{ form_errors(form) }}
 			    {{ form_row(form.email) }}
 			    {{ form_row(form.fname) }}
 				{{ form_row(form.lname) }}

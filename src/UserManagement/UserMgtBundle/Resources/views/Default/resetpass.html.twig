@@ -4,7 +4,12 @@
 <div class="container">
     <h2 class="form-signin-heading">{% block title %}Reset Password{% endblock %}</h2>
     <form action="{{ path('resetpass') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
-          {% for flashMessage in app.session.flashbag.get('alert') %}
+          {% for flashMessage in app.session.flashbag.get('alert-danger') %}
+                <div class="alert alert-danger" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
+          {% for flashMessage in app.session.flashbag.get('alert-success') %}
             <div class="alert alert-success" role="alert">
             {{ flashMessage }}
             </div> 

@@ -144,7 +144,7 @@ class DefaultController extends Controller
             //$date = strtotime($date);
             //$date = date("m.d.y" , $date);
             if($IsConfirmed == true){
-                $this->get('session')->getFlashBag()->add('alert-success', 'Account already activated');
+                $this->get('session')->getFlashBag()->add('alert-success', 'Account is already activated');
                     return $this->redirect($this->generateUrl('login'));
             //}elseif($date != $curDate){
                 //$this->get('session')->getFlashBag()->add('alert', 'Confirmation Link already expired');
@@ -191,14 +191,14 @@ class DefaultController extends Controller
 
                 $em->persist($currentUser);
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('alert', 'Successfully updated profile.');
+                $this->get('session')->getFlashBag()->add('alert-success', 'Successfully updated profile.');
                 return $this->redirect($this->generateUrl('profile'));
             }
             else{
                 foreach ($form->getErrors() as $er) {
                 	$er;
                 }
-                $this->get('session')->getFlashBag()->add('alert', $er);
+                $this->get('session')->getFlashBag()->add('alert-danger', $er);
                 return $this->redirect($this->generateUrl('profile'));
             }
 
@@ -227,11 +227,11 @@ class DefaultController extends Controller
                 $cnpass = $form["connewpassword"]->getData();
 
                 if ($pass != $curPass){
-                    $this->get('session')->getFlashBag()->add('alert', 'Incorrect current password');
+                    $this->get('session')->getFlashBag()->add('alert-danger', 'Incorrect current password');
                     return $this->redirect($this->generateUrl('changepass'));
                 }
                 elseif ( $newpass != $cnpass){
-                    $this->get('session')->getFlashBag()->add('alert', 'Password mismatch');
+                    $this->get('session')->getFlashBag()->add('alert-danger', 'Password mismatch');
                     return $this->redirect($this->generateUrl('changepass'));
                 }
                 else{
@@ -241,13 +241,13 @@ class DefaultController extends Controller
                     $em->persist($currentUser);
                     $em->flush();
 
-                    $this->get('session')->getFlashBag()->add('alert', 'Successfully changed password.');
+                    $this->get('session')->getFlashBag()->add('alert-success', 'Successfully changed password.');
                     return $this->redirect($this->generateUrl('changepass'));
                 }
             }
             else{
                 foreach ($form->getErrors() as $er) {
-                    $this->get('session')->getFlashBag()->add('alert',$er);
+                    $this->get('session')->getFlashBag()->add('alert-danger',$er);
                     return $this->redirect($this->generateUrl('changepass'));
                 }
             }
@@ -269,7 +269,7 @@ class DefaultController extends Controller
                     ->getRepository('UserManagementUserMgtBundle:User')
                     ->findOneBy(array('email' => $email));
                 if(!$user){
-                    $this->get('session')->getFlashBag()->add('alert', 'Email address not yet registered.');
+                    $this->get('session')->getFlashBag()->add('alert-danger', 'Email address not yet registered.');
                     return $this->redirect($this->generateUrl('forgotpass'));
                 }else{
                     $email = $user->getEmail();
@@ -311,7 +311,7 @@ class DefaultController extends Controller
                 ->getRepository('UserManagementUserMgtBundle:Confirm')
                 ->findOneBy(array('confirmkey' => $key));
         if(!$confirmed){
-            $this->get('session')->getFlashBag()->add('alert', 'Invalid confirmation link');
+            $this->get('session')->getFlashBag()->add('alert-danger', 'Invalid confirmation link');
                     return $this->redirect($this->generateUrl('confirm'));
         }else{
             $IsConfirmed = $confirmed->getIsConfirmed();
@@ -378,7 +378,7 @@ class DefaultController extends Controller
             else{
 
                 foreach ($form->getErrors() as $er) {
-                    $this->get('session')->getFlashBag()->add('alert',$er);
+                    $this->get('session')->getFlashBag()->add('alert-danger',$er);
                     return $this->redirect($this->generateUrl('resetpass'));
                 }
             }

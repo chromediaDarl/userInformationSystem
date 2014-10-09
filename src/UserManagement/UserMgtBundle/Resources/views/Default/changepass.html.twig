@@ -14,11 +14,16 @@
               {% block title %}Change Password{% endblock %}
             </h1>
             <form action="{{ path('changepass') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
-            	{% for flashMessage in app.session.flashbag.get('alert') %}
-      					<div class="alert alert-success" role="alert">
+            	{% for flashMessage in app.session.flashbag.get('alert-danger') %}
+      					<div class="alert alert-danger" role="alert">
       					{{ flashMessage }}
       					</div> 
       				{% endfor %}
+              {% for flashMessage in app.session.flashbag.get('alert-success') %}
+                <div class="alert alert-success" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
       				{{ form_errors(form) }}
 
       			    {{ form_row(form.password) }}

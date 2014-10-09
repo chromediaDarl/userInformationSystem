@@ -2,7 +2,7 @@
 {% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
 {% block body %}
 <div class="container">
-	{% for flashMessage in app.session.flashbag.get('alert') %}
+	{% for flashMessage in app.session.flashbag.get('alert-danger') %}
 		<div class="alert alert-danger" role="alert">
 		{{ flashMessage }}
 		</div> 
