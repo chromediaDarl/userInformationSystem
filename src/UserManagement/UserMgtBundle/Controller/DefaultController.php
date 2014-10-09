@@ -13,6 +13,7 @@ use UserManagement\UserMgtBundle\Form\UserType;
 use UserManagement\UserMgtBundle\Form\CurrentUserType;
 use UserManagement\UserMgtBundle\Form\ChangePassType;
 use UserManagement\UserMgtBundle\Form\ForgotPassType;
+use UserManagement\UserMgtBundle\Form\ResetPassType;
 
 class DefaultController extends Controller
 {
@@ -139,13 +140,15 @@ class DefaultController extends Controller
         }else{
             $confirmID = $confirmed->getId();
             $IsConfirmed = $confirmed->getIsConfirmed();
-            $curDate = date("m.d.y");
+            //$curDate = date("m.d.y");
+            //$date = strtotime($date);
+            //$date = date("m.d.y" , $date);
             if($IsConfirmed == true){
                 $this->get('session')->getFlashBag()->add('alert-success', 'Account already activated');
                     return $this->redirect($this->generateUrl('login'));
-            }elseif($date != $curDate){
-                $this->get('session')->getFlashBag()->add('alert', 'Confirmation Link already expired');
-                    return $this->redirect($this->generateUrl('confirm'));
+            //}elseif($date != $curDate){
+                //$this->get('session')->getFlashBag()->add('alert', 'Confirmation Link already expired');
+                    //return $this->redirect($this->generateUrl('confirm'));
             }else{
                 $confirmed->setIsConfirmed(1);
                 $em->persist($confirmed);
@@ -254,26 +257,133 @@ class DefaultController extends Controller
     }
     public function forgotPassAction(Request $request)
     {
-        $user = new User();
-        $form = $this->createForm(new ForgotPassType(), $user);
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new ForgotPassType());
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
             if ($form->isValid()) {
                 $email = $form["email"]->getData();
+                $user = new User();
                 $user = $this->getDoctrine()
-                    ->getRepository('UserMgtBundle:User')
+                    ->getRepository('UserManagementUserMgtBundle:User')
                     ->findOneBy(array('email' => $email));
                 if(!$user){
                     $this->get('session')->getFlashBag()->add('alert', 'Email address not yet registered.');
                     return $this->redirect($this->generateUrl('forgotpass'));
                 }else{
-                    $this->get('session')->getFlashBag()->add('alert', 'Email found.');
-                    return $this->redirect($this->generateUrl('forgotpass'));
+                    $email = $user->getEmail();
+                    //Confirmation Email Table
+                    $confirm = new Confirm();
+                    $confirm = $confirm->setUser($user);
+                    $confirm->setEmail($email);
+                    $key = md5(uniqid($email));
+                    $time = time();
+                    $confirm->setConfirmKey($key);
+                    $confirm->setIsConfirmed(0);
+                    $url = $this->generateUrl('reset', array('key' => $key, 'time' => $time ),true);
+
+                    $em->persist($confirm);
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('Password Reset')
+                        ->setFrom('kimberlydarl.barbadillo@chromedia.com')
+                        ->setTo($email)
+                        ->setBody($this->renderView('UserManagementUserMgtBundle:Default:forgotPassEmail.html.twig', array('confirm' => $confirm, 'user' => $user, 'url' => $url)), 'text/html');
+                    $this->get('mailer')->send($message);
+
+                    $em->flush();
+
+                    $this->get('session')->getFlashBag()->add('alert-success', 'Please click the link sent to your mailbox for resetting of password. Thank you.');
+                    return $this->redirect($this->generateUrl('login'));
                 }
             }
         }
 
-        return $this->render('UserManagementUserMgtBundle:Default:forgotpass.html.twig', array());
+        return $this->render('UserManagementUserMgtBundle:Default:forgotpass.html.twig', array('form' => $form->createView()));
+    }
+    public function resetConfirmAction($key,$time)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $confirm = new Confirm();
+        $confirmed = $this->getDoctrine()
+                ->getRepository('UserManagementUserMgtBundle:Confirm')
+                ->findOneBy(array('confirmkey' => $key));
+        if(!$confirmed){
+            $this->get('session')->getFlashBag()->add('alert', 'Invalid confirmation link');
+                    return $this->redirect($this->generateUrl('confirm'));
+        }else{
+            $IsConfirmed = $confirmed->getIsConfirmed();
+            $curTime = time();
+            $timeDiff = $curTime - $time;
+            if($IsConfirmed == true){
+                $this->get('session')->getFlashBag()->add('alert-success', 'Account already activated');
+                    return $this->redirect($this->generateUrl('login'));
+            }elseif($timeDiff > 86400){
+                $this->get('session')->getFlashBag()->add('alert-success', 'Reset Password link already expired. Login or click forgot password again.');
+                    return $this->redirect($this->generateUrl('login'));
+            }else{
+                $confirmed->setIsConfirmed(1);
+                $em->persist($confirmed);
+
+                $userID = $confirmed->getUser();
+
+                $user = new User();
+                $user = $this->getDoctrine()
+                    ->getRepository('UserManagementUserMgtBundle:User')
+                    ->findOneBy(array('id' => $userID));
+
+                $form = $this->createForm(new ResetPassType(), $user);
+
+                $em->flush();
+
+                //$this->get('session')->getFlashBag()->add('alert-success', 'Successfully activated your account.');
+                    //return $this->redirect($this->generateUrl('login'));
+                return $this->render('UserManagementUserMgtBundle:Default:resetpass.html.twig', array('form' => $form->createView(), 'user' => $user));
+            }
+        }
+
+        return $this->render('UserManagementUserMgtBundle:Default:resetConfirm.html.twig', array('key' => $key, 'date' => $date));
+    }
+
+    public function resetPassAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $this->createForm(new ResetPassType());
+
+        $userID = $request->request->get('id');
+
+        if ($request->getMethod() == 'POST') {
+            $form->submit($request);
+            if ($form->isValid()) {
+
+                $pass = $form["password"]->getData();
+
+                $user = new User();
+                $user = $this->getDoctrine()
+                    ->getRepository('UserManagementUserMgtBundle:User')
+                    ->findOneBy(array('id' => $userID));
+
+                $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+                $user->setPassword($encoder->encodePassword($pass, $user->getSalt()));
+
+                $em->persist($user);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('alert-success', 'Successfully changed password.');
+                return $this->redirect($this->generateUrl('login'));
+            }
+            else{
+
+                foreach ($form->getErrors() as $er) {
+                    $this->get('session')->getFlashBag()->add('alert',$er);
+                    return $this->redirect($this->generateUrl('resetpass'));
+                }
+            }
+
+        }
+        return $this->render('UserManagementUserMgtBundle:Default:resetpass.html.twig', array('form' => $form->createView()));
     }
 }

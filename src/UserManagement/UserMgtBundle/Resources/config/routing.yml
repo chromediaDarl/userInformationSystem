@@ -45,3 +45,15 @@ forgotpass:
     defaults:  { _controller: UserManagementUserMgtBundle:Default:forgotpass }
     requirements:
         _method:  GET|POST
+
+reset:
+    pattern:   /reset/{key}/{time}
+    defaults:  { _controller: UserManagementUserMgtBundle:Default:resetConfirm }
+    requirements:
+        _method:  GET|POST
+
+resetpass:
+    pattern:   /resetpass
+    defaults:  { _controller: UserManagementUserMgtBundle:Default:resetPass }
+    requirements:
+        _method:  GET|POST

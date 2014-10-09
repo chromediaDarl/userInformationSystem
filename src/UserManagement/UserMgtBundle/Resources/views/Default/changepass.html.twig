@@ -17,7 +17,6 @@
             	{% for flashMessage in app.session.flashbag.get('alert') %}
       					<div class="alert alert-success" role="alert">
       					{{ flashMessage }}
-                {{ form_errors(form) }}
       					</div> 
       				{% endfor %}
       				{{ form_errors(form) }}

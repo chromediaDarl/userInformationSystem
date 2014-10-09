@@ -1,0 +1,27 @@
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/resetpass.html.twig #}
+{% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
+{% block body %}
+<div class="container">
+    <h2 class="form-signin-heading">{% block title %}Reset Password{% endblock %}</h2>
+    <form action="{{ path('resetpass') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
+          {% for flashMessage in app.session.flashbag.get('alert') %}
+            <div class="alert alert-success" role="alert">
+            {{ flashMessage }}
+            </div> 
+          {% endfor %}
+      				{{ form_errors(form) }}
+
+                {{ form_row(form.password.first) }}
+      			    {{ form_row(form.password.second) }}
+			    
+			    {{ form_rest(form) }}
+			    {#
+			        If you want to control the URL the user
+			        is redirected to on success (more details below)
+			        <input type="hidden" name="_target_path" value="/account" />
+			    #}
+          <input type="hidden" name="id" value="{{ user.id }}" />
+			    <button class="btn btn-lg btn-primary btn-block" type="submit">Update Password</button>
+			</form>
+</div> <!-- /container -->
+{% endblock %}
