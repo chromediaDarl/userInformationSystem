@@ -1,0 +1,11 @@
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/forgotpass.html.twig #}
+{% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
+{% block body %}
+<div class="container">
+	{% for flashMessage in app.session.flashbag.get('alert') %}
+		<div class="alert alert-danger" role="alert">
+		{{ flashMessage }}
+		</div> 
+	{% endfor %}
+</div>
+{% endblock %}

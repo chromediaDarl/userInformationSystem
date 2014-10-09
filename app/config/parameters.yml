@@ -10,7 +10,7 @@ parameters:
     mailer_encryption: ssl
     mailer_auth_mode: login
     mailer_host: smtp.gmail.com
-    mailer_user: kimberlydarl.barbadillo@chromdedia.com
+    mailer_user: kimberlydarl.barbadillo@chromedia.com
     mailer_password: hopelessly123
     locale: en
     secret: b77ef3b36c1c5828ee2e8a61d8eb8f5b23885648

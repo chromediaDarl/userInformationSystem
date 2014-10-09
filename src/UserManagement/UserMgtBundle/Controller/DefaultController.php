@@ -12,6 +12,7 @@ use UserManagement\UserMgtBundle\Entity\Confirm;
 use UserManagement\UserMgtBundle\Form\UserType;
 use UserManagement\UserMgtBundle\Form\CurrentUserType;
 use UserManagement\UserMgtBundle\Form\ChangePassType;
+use UserManagement\UserMgtBundle\Form\ForgotPassType;
 
 class DefaultController extends Controller
 {
@@ -100,7 +101,7 @@ class DefaultController extends Controller
                     $date = date("m.d.y");
                     $confirm->setConfirmKey($key);
                     $confirm->setIsConfirmed(0);
-                    $url = $this->generateUrl('confirm', array('key' => $key, 'date' => $date ));
+                    $url = $this->generateUrl('confirm', array('key' => $key, 'date' => $date ),true);
 
                     $em->persist($confirm);
 
@@ -108,7 +109,7 @@ class DefaultController extends Controller
                         ->setSubject('Email Confirmation')
                         ->setFrom('kimberlydarl.barbadillo@chromedia.com')
                         ->setTo($email)
-                        ->setBody($this->renderView('UserManagementUserMgtBundle:Default:confirmEmail.html.twig', array('confirm' => $confirm, 'user' => $user, 'url' => $url)));
+                        ->setBody($this->renderView('UserManagementUserMgtBundle:Default:confirmEmail.html.twig', array('confirm' => $confirm, 'user' => $user, 'url' => $url)), 'text/html');
                     $this->get('mailer')->send($message);
 
                     $em->flush();
@@ -126,8 +127,47 @@ class DefaultController extends Controller
 
     public function confirmAccountAction($key,$date)
     {
-        $user = $this->getUser();
-        return $this->render('UserManagementUserMgtBundle:Default:confirmAccount.html.twig', array('user' => $user));
+        $em = $this->getDoctrine()->getManager();
+
+        $confirm = new Confirm();
+        $confirmed = $this->getDoctrine()
+                ->getRepository('UserManagementUserMgtBundle:Confirm')
+                ->findOneBy(array('confirmkey' => $key));
+        if(!$confirmed){
+            $this->get('session')->getFlashBag()->add('alert', 'Invalid confirmation link');
+                    return $this->redirect($this->generateUrl('confirm'));
+        }else{
+            $confirmID = $confirmed->getId();
+            $IsConfirmed = $confirmed->getIsConfirmed();
+            $curDate = date("m.d.y");
+            if($IsConfirmed == true){
+                $this->get('session')->getFlashBag()->add('alert-success', 'Account already activated');
+                    return $this->redirect($this->generateUrl('login'));
+            }elseif($date != $curDate){
+                $this->get('session')->getFlashBag()->add('alert', 'Confirmation Link already expired');
+                    return $this->redirect($this->generateUrl('confirm'));
+            }else{
+                $confirmed->setIsConfirmed(1);
+                $em->persist($confirmed);
+
+                $userID = $confirmed->getUser();
+
+                $user = new User();
+                $user = $this->getDoctrine()
+                    ->getRepository('UserManagementUserMgtBundle:User')
+                    ->findOneBy(array('id' => $userID));
+
+                $user->setIsActive(1);
+                $em->persist($user);
+
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('alert-success', 'Successfully activated your account.');
+                    return $this->redirect($this->generateUrl('login'));
+            }
+        }
+
+        return $this->render('UserManagementUserMgtBundle:Default:confirmAccount.html.twig', array('key' => $key, 'date' => $date));
     }
 
     public function profileAction(Request $request)
@@ -212,18 +252,23 @@ class DefaultController extends Controller
         }
         return $this->render('UserManagementUserMgtBundle:Default:changepass.html.twig', array('form' => $form->createView()));
     }
-    public function forgotPassAction()
+    public function forgotPassAction(Request $request)
     {
+        $user = new User();
+        $form = $this->createForm(new ForgotPassType(), $user);
+
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
             if ($form->isValid()) {
                 $email = $form["email"]->getData();
-
                 $user = $this->getDoctrine()
                     ->getRepository('UserMgtBundle:User')
                     ->findOneBy(array('email' => $email));
                 if(!$user){
-                    $this->get('session')->getFlashBag()->add('alert', 'Password mismatch');
+                    $this->get('session')->getFlashBag()->add('alert', 'Email address not yet registered.');
+                    return $this->redirect($this->generateUrl('forgotpass'));
+                }else{
+                    $this->get('session')->getFlashBag()->add('alert', 'Email found.');
                     return $this->redirect($this->generateUrl('forgotpass'));
                 }
             }
