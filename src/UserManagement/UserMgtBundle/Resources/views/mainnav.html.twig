@@ -2,8 +2,8 @@
 	<div class="inner">
 	  <h3 class="masthead-brand">Cover</h3>
 	  <ul class="nav masthead-nav">
-	    <li><a href="{{ path('home') }}">Home</a></li>
-	    <li><a href="{{ path('profile') }}">Profile</a></li>
+	    <li {% if app.request.attributes.get( '_route' ) == 'home' %} class='active'{% endif %}><a href="{{ path('home') }}">Home</a></li>
+	    <li {% if app.request.attributes.get( '_route' ) == 'profile' or app.request.attributes.get( '_route' ) == 'changepass' %} class='active'{% endif %}><a href="{{ path('profile') }}">Profile</a></li>
 	    <li><a href="{{ path('logout') }}">Logout</a></li>
 	  </ul>
 	</div>

@@ -16,6 +16,25 @@
           {% endfor %}
       				{{ form_errors(form) }}
 
+              {% block form_row %}
+                  {% spaceless %}
+                      <div class="form-group{% if form_errors(form.password.first) %} has-error{% else %} has-success{% endif %} has-feedback">
+                          {{ form_widget(form.password.first) }}
+                          {% if form_errors(form.password.first) %}
+                            <span class="help-block">{{ form_errors(form.password.first) }}</span>
+                            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                          {% endif %}
+                      </div>
+
+                      <div class="form-group{% if form_errors(form.password.first) %} has-error{% else %} has-success{% endif %} has-feedback">
+                          {{ form_widget(form.password.second) }}
+                          {% if form_errors(form.password.first) %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                          {% endif %}
+                      </div>
+                  {% endspaceless %}
+              {% endblock form_row %}
+
                 {{ form_row(form.password.first) }}
       			    {{ form_row(form.password.second) }}
 			    
@@ -26,7 +45,7 @@
 			        <input type="hidden" name="_target_path" value="/account" />
 			    #}
           <input type="hidden" name="id" value="{{ user.id }}" />
-			    <button class="btn btn-lg btn-primary btn-block" type="submit">Update Password</button>
+			    <button class="btn btn-lg btn-warning btn-block" type="submit">Update Password</button>
 			</form>
 </div> <!-- /container -->
 {% endblock %}

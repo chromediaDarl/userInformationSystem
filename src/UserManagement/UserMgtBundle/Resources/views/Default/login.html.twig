@@ -3,12 +3,17 @@
 {% block body %}
 <div class="container">
 	<form action="{{ path('login_check') }}" method="post" class="form-signin" role="form">
+		<h2 class="form-signin-heading">{% block title %}Sign In{% endblock %}</h2>
 		{% for flashMessage in app.session.flashbag.get('alert-success') %}
 			<div class="alert alert-success" role="alert">
 			{{ flashMessage }}
 			</div> 
 		{% endfor %}
-		<h2 class="form-signin-heading">{% block title %}Sign In{% endblock %}</h2>
+		{% for flashMessage in app.session.flashbag.get('alert-danger') %}
+			<div class="alert alert-danger" role="alert">
+			{{ flashMessage }}
+			</div> 
+		{% endfor %}
 		{% if error %}
 		    <div class="alert alert-danger" role="alert">{{ error.message }}</div>
 		{% endif %}
@@ -19,7 +24,7 @@
 	        is redirected to on success (more details below)
 	        <input type="hidden" name="_target_path" value="/account" />
 	    #}
-	    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+	    <button class="btn btn-lg btn-warning btn-block" type="submit">Sign In</button>
 	    <p class="space">
 		    <a href="{{ path('signup') }}"><span class="f-left">New here? Sign Up Now!</span></a>
 			<a href="{{ path('forgotpass') }}"><span class="f-right">Forgot your password?</span></a>

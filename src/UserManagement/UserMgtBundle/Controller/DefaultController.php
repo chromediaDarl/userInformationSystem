@@ -317,11 +317,8 @@ class DefaultController extends Controller
             $IsConfirmed = $confirmed->getIsConfirmed();
             $curTime = time();
             $timeDiff = $curTime - $time;
-            if($IsConfirmed == true){
-                $this->get('session')->getFlashBag()->add('alert-success', 'Account already activated');
-                    return $this->redirect($this->generateUrl('login'));
-            }elseif($timeDiff > 86400){
-                $this->get('session')->getFlashBag()->add('alert-success', 'Reset Password link already expired. Login or click forgot password again.');
+            if(($IsConfirmed == true) || ($timeDiff > 86400)){
+                $this->get('session')->getFlashBag()->add('alert-danger', 'Reset Password link already used or expired. Login or click forgot password again.');
                     return $this->redirect($this->generateUrl('login'));
             }else{
                 $confirmed->setIsConfirmed(1);
@@ -355,16 +352,18 @@ class DefaultController extends Controller
 
         $userID = $request->request->get('id');
 
+        $user = new User();
+        $user = $this->getDoctrine()
+            ->getRepository('UserManagementUserMgtBundle:User')
+            ->findOneBy(array('id' => $userID));
+
+        $form = $this->createForm(new ResetPassType(), $user);
+
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
             if ($form->isValid()) {
 
                 $pass = $form["password"]->getData();
-
-                $user = new User();
-                $user = $this->getDoctrine()
-                    ->getRepository('UserManagementUserMgtBundle:User')
-                    ->findOneBy(array('id' => $userID));
 
                 $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($pass, $user->getSalt()));
@@ -384,6 +383,6 @@ class DefaultController extends Controller
             }
 
         }
-        return $this->render('UserManagementUserMgtBundle:Default:resetpass.html.twig', array('form' => $form->createView()));
+        return $this->render('UserManagementUserMgtBundle:Default:resetpass.html.twig', array('form' => $form->createView(), 'user' => $user));
     }
 }
