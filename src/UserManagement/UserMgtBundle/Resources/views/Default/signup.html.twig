@@ -2,63 +2,72 @@
 {% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
 {% block body %}
 <div class="container">
-	<form action="{{ path('signup') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
-		<h2 class="form-signin-heading">{% block title %}Sign Up{% endblock %}</h2>
-	    {% for flashMessage in app.session.flashbag.get('alert-danger') %}
-			<div class="alert alert-danger" role="alert">
-			{{ flashMessage }}
-			</div> 
-		{% endfor %}
-		{{ form_errors(form) }}
-		{% block form_row %}
-	          {% spaceless %}
-	              <div class="form-group{% if form_errors(form.fname) %} has-error{% else %} has-success{% endif %} has-feedback">
-	                  {{ form_widget(form.fname) }}
-	                  {% if form_errors(form.fname) %}
-	                    <span class="help-block">{{ form_errors(form.fname) }}</span>
-	                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-	                  {% endif %}
-	              </div>
+    <div class="row vertical-offset-100">
+    	<div class="col-md-4 col-md-offset-4">
+    		<div class="panel panel-default">
+			  	<div class="panel-heading">
+			    	<h3 class="panel-title">{% block title %}Sign Up{% endblock %}</h3>
+			 	</div>
+			  	<div class="panel-body">
+					<form action="{{ path('signup') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
+					    {% for flashMessage in app.session.flashbag.get('alert-danger') %}
+							<div class="alert alert-danger" role="alert">
+							{{ flashMessage }}
+							</div> 
+						{% endfor %}
+						{{ form_errors(form) }}
+						{% block form_row %}
+					          {% spaceless %}
+					              <div class="form-group{% if form_errors(form.fname) %} has-error{% else %} has-success{% endif %} has-feedback">
+					                  {{ form_widget(form.fname) }}
+					                  {% if form_errors(form.fname) %}
+					                    <span class="help-block">{{ form_errors(form.fname) }}</span>
+					                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					                  {% endif %}
+					              </div>
 
-	              <div class="form-group{% if form_errors(form.lname) %} has-error{% else %} has-success{% endif %} has-feedback">
-	                  {{ form_widget(form.lname) }}
-	                  {% if form_errors(form.lname) %}
-	                    <span class="help-block">{{ form_errors(form.lname) }}</span>
-	                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-	                  {% endif %}
-	              </div>
+					              <div class="form-group{% if form_errors(form.lname) %} has-error{% else %} has-success{% endif %} has-feedback">
+					                  {{ form_widget(form.lname) }}
+					                  {% if form_errors(form.lname) %}
+					                    <span class="help-block">{{ form_errors(form.lname) }}</span>
+					                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					                  {% endif %}
+					              </div>
 
-	              <div class="form-group{% if form_errors(form.email) %} has-error{% else %} has-success{% endif %} has-feedback">
-	                  {{ form_widget(form.email) }}
-	                  {% if form_errors(form.email) %}
-	                    <span class="help-block">{{ form_errors(form.email) }}</span>
-	                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-	                  {% endif %}
-	              </div>
+					              <div class="form-group{% if form_errors(form.email) %} has-error{% else %} has-success{% endif %} has-feedback">
+					                  {{ form_widget(form.email) }}
+					                  {% if form_errors(form.email) %}
+					                    <span class="help-block">{{ form_errors(form.email) }}</span>
+					                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					                  {% endif %}
+					              </div>
 
-	              <div class="form-group{% if form_errors(form.password) %} has-error{% else %} has-success{% endif %} has-feedback">
-	                  {{ form_widget(form.password) }}
-	                  {% if form_errors(form.password) %}
-	                    <span class="help-block">{{ form_errors(form.password) }}</span>
-	                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-	                  {% endif %}
-	              </div>
+					              <div class="form-group{% if form_errors(form.password) %} has-error{% else %} has-success{% endif %} has-feedback">
+					                  {{ form_widget(form.password) }}
+					                  {% if form_errors(form.password) %}
+					                    <span class="help-block">{{ form_errors(form.password) }}</span>
+					                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					                  {% endif %}
+					              </div>
 
-	              <div class="form-group{% if form_errors(form.password) %} has-error{% else %} has-success{% endif %} has-feedback">
-	                  {{ form_widget(form.conpassword) }}
-	                  {% if form_errors(form.password) %}
-	                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-	                  {% endif %}
-	              </div>
-	          {% endspaceless %}
-	      {% endblock form_row %}
+					              <div class="form-group{% if form_errors(form.password) %} has-error{% else %} has-success{% endif %} has-feedback">
+					                  {{ form_widget(form.conpassword) }}
+					                  {% if form_errors(form.password) %}
+					                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					                  {% endif %}
+					              </div>
+					          {% endspaceless %}
+					      {% endblock form_row %}
 
-        {{ form_rest(form) }}
+				        {{ form_rest(form) }}
 
-        <button class="btn btn-lg btn-warning btn-block" type="submit">Sign Up</button>
-	    <p class="space">
-		    <a href="{{ path('login') }}"><span class="f-left">&laquo; Back to login page</span></a>
-		</p>
-    </form>
-</div> <!-- /container -->
+				        <button class="btn btn-lg btn-warning btn-block" type="submit">Sign Up</button>
+					    <p class="space">
+						    <a href="{{ path('login') }}"><span class="back">&laquo; Back to login page</span></a>
+						</p>
+				    </form>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

@@ -27,16 +27,30 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body {% if app.request.attributes.get( '_route' ) == 'login' %} class='sign-in'{% endif %}>
   {% block body %}{% endblock %}
 <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://mymaplist.com/js/vendor/TweenLite.min.js"></script>
     {% block javascripts %}
 	    {% javascripts 'bundles/usermanagementusermgt/js/*' %}
 	        <script type="text/javascript" src="{{ asset_url }}"></script>
 	    {% endjavascripts %}
+      <script type="text/javascript">
+      $(document).ready(function(){
+        $(document).mousemove(function(e){
+           TweenLite.to($('body'), 
+              .5, 
+              { css: 
+                  {
+                      backgroundPosition: ""+ parseInt(event.pageX/8) + "px "+parseInt(event.pageY/'12')+"px, "+parseInt(event.pageX/'15')+"px "+parseInt(event.pageY/'15')+"px, "+parseInt(event.pageX/'30')+"px "+parseInt(event.pageY/'30')+"px"
+                  }
+              });
+        });
+      });
+      </script>
 	{% endblock %}
   </body>
 </html>
