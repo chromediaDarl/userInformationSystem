@@ -13,21 +13,24 @@
             <h1 class="cover-heading">
               {% block title %}Your Profile{% endblock %}
             </h1>
+            <div class="msg-section">
+              {% for flashMessage in app.session.flashbag.get('alert-danger') %}
+                <div class="alert alert-danger" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
+              {% for flashMessage in app.session.flashbag.get('alert-success') %}
+                <div class="alert alert-success" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
+              <input type="text" name="email" class="form-control" value="{{ user.email }}" readonly="readonly" />
+            </div>
+            <div id="profile">
             <form action="{{ path('profile') }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
-            	{% for flashMessage in app.session.flashbag.get('alert-danger') %}
-  					<div class="alert alert-danger" role="alert">
-  					{{ flashMessage }}
-  					</div> 
-  				{% endfor %}
-            	{% for flashMessage in app.session.flashbag.get('alert-success') %}
-					<div class="alert alert-success" role="alert">
-					{{ flashMessage }}
-					</div> 
-				{% endfor %}
 				{{ form_errors(form) }}
-			    {{ form_row(form.email) }}
 			    {{ form_row(form.fname) }}
-				{{ form_row(form.lname) }}
+				  {{ form_row(form.lname) }}
 			    
 			    {{ form_rest(form) }}
 			    {#
@@ -35,11 +38,12 @@
 			        is redirected to on success (more details below)
 			        <input type="hidden" name="_target_path" value="/account" />
 			    #}
-			    <button class="btn btn-lg btn-warning btn-block" type="submit">Update Profile</button>
+			    <button class="btn btn-lg btn-warning btn-block" name="profile" type="submit">Update Profile</button>
 			    <p class="space">
 				    <a href="change-password"><span class="f-right">Want to change your password?</span></a>
 				</p>
 			</form>
+      </div>
           </div>
 
           <div class="mastfoot">

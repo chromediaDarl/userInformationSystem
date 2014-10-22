@@ -1,0 +1,72 @@
+{# src/UserManagement/UserMgtBundle/Resources/views/Default/changepass.html.twig #}
+{% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
+{% block body %}
+<div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          {% include 'UserManagementUserMgtBundle::mainnav.html.twig' %}
+
+          <div class="inner cover">
+            <h1 class="cover-heading">
+              {% block title %}Edit Contact{% endblock %}
+            </h1>
+            <form action="{{ path('edit-contacts', { 'id': contact.id}) }}" method="post" {{ form_enctype(form) }} class="form-signup" role="form">
+            	{% for flashMessage in app.session.flashbag.get('alert-danger') %}
+      					<div class="alert alert-danger" role="alert">
+      					{{ flashMessage }}
+      					</div> 
+      				{% endfor %}
+              {% for flashMessage in app.session.flashbag.get('alert-success') %}
+                <div class="alert alert-success" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
+      				{{ form_errors(form) }}              
+              {% block form_row %}
+                  {% spaceless %}
+                      <div class="form-group{% if form_errors(form.firstname) %} has-error{% else %} has-success{% endif %} has-feedback">
+                          {{ form_widget(form.firstname) }}
+                          {% if form_errors(form.firstname) %}
+                            <span class="help-block">{{ form_errors(form.firstname) }}</span>
+                            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                          {% endif %}
+                      </div>
+
+                      <div class="form-group{% if form_errors(form.lastname) %} has-error{% else %} has-success{% endif %} has-feedback">
+                          {{ form_widget(form.lastname) }}
+                          {% if form_errors(form.lastname) %}
+                            <span class="help-block">{{ form_errors(form.lastname) }}</span>
+                            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                          {% endif %}
+                      </div>
+
+                      <div class="form-group{% if form_errors(form.email) %} has-error{% else %} has-success{% endif %} has-feedback">
+                          {{ form_widget(form.email) }}
+                          {% if form_errors(form.email) %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                          {% endif %}
+                      </div>
+                      {{ form_widget(form.phone) }}
+                  {% endspaceless %}
+              {% endblock form_row %}
+			    
+			    {{ form_rest(form) }}
+			    {#
+			        If you want to control the URL the user
+			        is redirected to on success (more details below)
+			        <input type="hidden" name="_target_path" value="/account" />
+			    #}
+			    <button class="btn btn-lg btn-warning btn-block" type="submit">Edit Contact</button>
+			</form>
+          </div>
+          {% include 'UserManagementUserMgtBundle::footer.html.twig' %}
+
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}

@@ -34,10 +34,12 @@ security:
                 login_path:  login
                 check_path:  login_check
                 default_target_path: /user
+                csrf_provider: form.csrf_provider
             logout:
                 path:   logout
                 target: login
             #anonymous: ~
+            http_basic: ~
             #http_basic:
             #    realm: "Secured Demo Area"
 

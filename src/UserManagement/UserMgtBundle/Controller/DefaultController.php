@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 // Import new namespaces
 use UserManagement\UserMgtBundle\Entity\User;
 use UserManagement\UserMgtBundle\Entity\Confirm;
@@ -19,8 +20,7 @@ class DefaultController extends Controller
 {
     public function welcomeAction()
     {
-        $user = $this->getUser();
-        return $this->render('UserManagementUserMgtBundle:Default:welcome.html.twig', array('user' => $user));
+        return $this->render('UserManagementUserMgtBundle:Default:welcome.html.twig', array());
     }
     public function loginAction(Request $request)
     {
@@ -56,9 +56,12 @@ class DefaultController extends Controller
         );
     }
 
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        //var_dump($this->get('swiftmailer.mailer.default.plugin.messagelogger'));
+        $session = $request->getSession();
         $user = $this->getUser();
+        $session->set('user', $user); 
         return $this->render('UserManagementUserMgtBundle:Default:index.html.twig', array('user' => $user));
     }
 
@@ -68,14 +71,12 @@ class DefaultController extends Controller
 
         $user = new User();
         $form = $this->createForm(new UserType(), $user);
+        $session = $request->getSession();
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $email = $form["email"]->getData();
-                $fname = $form["fname"]->getData();
-                $lname = $form["lname"]->getData();
                 $pass = $form["password"]->getData();
                 $cpass = $form["conpassword"]->getData();
 
@@ -84,9 +85,6 @@ class DefaultController extends Controller
                     return $this->redirect($this->generateUrl('signup'));
                 }
                 else{
-                    $user->setEmail($email);
-                    $user->setFname($fname);
-                    $user->setLname($lname);
                     $user->setIsActive(0);
                     $user->setSalt(md5(uniqid()));
                     $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
@@ -97,19 +95,22 @@ class DefaultController extends Controller
                     //Confirmation Email Table
                     $confirm = new Confirm();
                     $confirm = $confirm->setUser($user);
-                    $confirm->setEmail($email);
-                    $key = md5(uniqid($email));
-                    $date = date("m.d.y");
+                    $confirm->setEmail($form["email"]->getData());
+                    $key = md5(uniqid($form["email"]->getData()));
+                    //var_dump($date);
+                    //exit;
                     $confirm->setConfirmKey($key);
+                    $date = new \DateTime('now'); 
+                    $date = $date->format('YmdHis');
+                    $confirm->setconfirmDate(new \DateTime($date));
                     $confirm->setIsConfirmed(0);
                     $url = $this->generateUrl('confirm', array('key' => $key, 'date' => $date ),true);
-
                     $em->persist($confirm);
 
                     $message = \Swift_Message::newInstance()
                         ->setSubject('Email Confirmation')
                         ->setFrom('kimberlydarl.barbadillo@chromedia.com')
-                        ->setTo($email)
+                        ->setTo($form["email"]->getData())
                         ->setBody($this->renderView('UserManagementUserMgtBundle:Default:confirmEmail.html.twig', array('confirm' => $confirm, 'user' => $user, 'url' => $url)), 'text/html');
                     $this->get('mailer')->send($message);
 
@@ -131,37 +132,28 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $confirm = new Confirm();
-        $confirmed = $this->getDoctrine()
+        $confirm = $this->getDoctrine()
                 ->getRepository('UserManagementUserMgtBundle:Confirm')
                 ->findOneBy(array('confirmkey' => $key));
-        if(!$confirmed){
-            $this->get('session')->getFlashBag()->add('alert', 'Invalid confirmation link');
-                    return $this->redirect($this->generateUrl('confirm'));
+        if(!$confirm){
+            $this->get('session')->getFlashBag()->add('alert-danger', 'Invalid confirmation link');
+                    return $this->redirect($this->generateUrl('login'));
         }else{
-            $confirmID = $confirmed->getId();
-            $IsConfirmed = $confirmed->getIsConfirmed();
-            //$curDate = date("m.d.y");
-            //$date = strtotime($date);
-            //$date = date("m.d.y" , $date);
+            $IsConfirmed = $confirm->getIsConfirmed();
             if($IsConfirmed == true){
                 $this->get('session')->getFlashBag()->add('alert-success', 'Account is already activated');
                     return $this->redirect($this->generateUrl('login'));
-            //}elseif($date != $curDate){
-                //$this->get('session')->getFlashBag()->add('alert', 'Confirmation Link already expired');
-                    //return $this->redirect($this->generateUrl('confirm'));
             }else{
-                $confirmed->setIsConfirmed(1);
-                $em->persist($confirmed);
-
-                $userID = $confirmed->getUser();
+                $userID = $confirm->getUser();
 
                 $user = new User();
                 $user = $this->getDoctrine()
                     ->getRepository('UserManagementUserMgtBundle:User')
                     ->findOneBy(array('id' => $userID));
-
                 $user->setIsActive(1);
+
                 $em->persist($user);
+                $em->remove($confirm);
 
                 $em->flush();
 
@@ -184,11 +176,6 @@ class DefaultController extends Controller
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
             if ($form->isValid()) {
-                $fname = $form["fname"]->getData();
-                $lname = $form["lname"]->getData();
-                $currentUser->setFname($fname);
-                $currentUser->setLname($lname);
-
                 $em->persist($currentUser);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('alert-success', 'Successfully updated profile.');
@@ -196,14 +183,14 @@ class DefaultController extends Controller
             }
             else{
                 foreach ($form->getErrors() as $er) {
-                	$er;
+                    $er;
                 }
                 $this->get('session')->getFlashBag()->add('alert-danger', $er);
                 return $this->redirect($this->generateUrl('profile'));
             }
 
         }
-        return $this->render('UserManagementUserMgtBundle:Default:profile.html.twig', array('form' => $form->createView()));
+        return $this->render('UserManagementUserMgtBundle:Default:profile.html.twig', array('form' => $form->createView(), 'user' => $currentUser));
     }
     public function changepassAction(Request $request)
     {
@@ -278,10 +265,12 @@ class DefaultController extends Controller
                     $confirm = $confirm->setUser($user);
                     $confirm->setEmail($email);
                     $key = md5(uniqid($email));
-                    $time = time();
                     $confirm->setConfirmKey($key);
+                    $date = new \DateTime('now'); 
+                    $date = $date->format('YmdHis');
+                    $confirm->setconfirmDate(new \DateTime($date));
                     $confirm->setIsConfirmed(0);
-                    $url = $this->generateUrl('reset', array('key' => $key, 'time' => $time ),true);
+                    $url = $this->generateUrl('reset', array('key' => $key, 'date' => $date ),true);
 
                     $em->persist($confirm);
 
@@ -302,29 +291,29 @@ class DefaultController extends Controller
 
         return $this->render('UserManagementUserMgtBundle:Default:forgotpass.html.twig', array('form' => $form->createView()));
     }
-    public function resetConfirmAction($key,$time)
+    public function resetConfirmAction($key,$date)
     {
         $em = $this->getDoctrine()->getManager();
 
         $confirm = new Confirm();
-        $confirmed = $this->getDoctrine()
+        $confirm = $this->getDoctrine()
                 ->getRepository('UserManagementUserMgtBundle:Confirm')
                 ->findOneBy(array('confirmkey' => $key));
-        if(!$confirmed){
-            $this->get('session')->getFlashBag()->add('alert-danger', 'Invalid confirmation link');
-                    return $this->redirect($this->generateUrl('confirm'));
+        if(!$confirm){
+            $this->get('session')->getFlashBag()->add('alert-danger', 'Invalid reset password link');
+                    return $this->redirect($this->generateUrl('login'));
         }else{
-            $IsConfirmed = $confirmed->getIsConfirmed();
-            $curTime = time();
-            $timeDiff = $curTime - $time;
-            if(($IsConfirmed == true) || ($timeDiff > 86400)){
-                $this->get('session')->getFlashBag()->add('alert-danger', 'Reset Password link already used or expired. Login or click forgot password again.');
+            $IsConfirmed = $confirm->getIsConfirmed();
+            $currentDate = new \DateTime('now'); 
+            $date = date("YmdHis",strtotime($date));
+            $dateTime = new \DateTime($date);
+            $timeDiff = date_diff($currentDate,$dateTime);
+            $timeDiff = $timeDiff->format('%a');
+            if($timeDiff >= 1){
+                $this->get('session')->getFlashBag()->add('alert-danger', 'Reset Password link already expired. Login or click forgot password again.');
                     return $this->redirect($this->generateUrl('login'));
             }else{
-                $confirmed->setIsConfirmed(1);
-                $em->persist($confirmed);
-
-                $userID = $confirmed->getUser();
+                $userID = $confirm->getUser();
 
                 $user = new User();
                 $user = $this->getDoctrine()
@@ -332,6 +321,9 @@ class DefaultController extends Controller
                     ->findOneBy(array('id' => $userID));
 
                 $form = $this->createForm(new ResetPassType(), $user);
+
+                $em->persist($user);
+                $em->remove($confirm);
 
                 $em->flush();
 

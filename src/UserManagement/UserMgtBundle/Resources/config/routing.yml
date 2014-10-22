@@ -47,7 +47,7 @@ forgotpass:
         _method:  GET|POST
 
 reset:
-    pattern:   /reset/{key}/{time}
+    pattern:   /reset/{key}/{date}
     defaults:  { _controller: UserManagementUserMgtBundle:Default:resetConfirm }
     requirements:
         _method:  GET|POST
@@ -55,5 +55,29 @@ reset:
 resetpass:
     pattern:   /resetpass
     defaults:  { _controller: UserManagementUserMgtBundle:Default:resetPass }
+    requirements:
+        _method:  GET|POST
+
+contacts:
+    pattern:   /contacts
+    defaults:  { _controller: UserManagementUserMgtBundle:Contact:list }
+    requirements:
+        _method:  GET|POST
+
+add-contacts:
+    pattern:   /add-contacts
+    defaults:  { _controller: UserManagementUserMgtBundle:Contact:addContact }
+    requirements:
+        _method:  GET|POST
+
+edit-contacts:
+    pattern:   /edit-contacts/{id}
+    defaults:  { _controller: UserManagementUserMgtBundle:Contact:editContact }
+    requirements:
+        _method:  GET|POST
+
+delete-contacts:
+    pattern:   /delete-contact/{id}
+    defaults:  { _controller: UserManagementUserMgtBundle:Contact:deleteContact }
     requirements:
         _method:  GET|POST

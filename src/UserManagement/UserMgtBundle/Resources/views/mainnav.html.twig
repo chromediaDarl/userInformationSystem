@@ -1,9 +1,10 @@
 <div class="masthead clearfix">
 	<div class="inner">
-	  <h3 class="masthead-brand">Cover</h3>
+	  <h3 class="masthead-brand">Contact Management System</h3>
 	  <ul class="nav masthead-nav">
 	    <li {% if app.request.attributes.get( '_route' ) == 'home' %} class='active'{% endif %}><a href="{{ path('home') }}">Home</a></li>
 	    <li {% if app.request.attributes.get( '_route' ) == 'profile' or app.request.attributes.get( '_route' ) == 'changepass' %} class='active'{% endif %}><a href="{{ path('profile') }}">Profile</a></li>
+	    <li {% if app.request.attributes.get( '_route' ) == 'contacts' %} class='active'{% endif %}><a href="{{ path('contacts') }}">Contacts</a></li>
 	    <li><a href="{{ path('logout') }}">Logout</a></li>
 	  </ul>
 	</div>

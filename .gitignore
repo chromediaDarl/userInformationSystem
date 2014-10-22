@@ -36,3 +36,12 @@
 
 # Composer PHAR
 /composer.phar
+
+# Eclipse Metadata
+/.metadata
+.metadata/.log
+.metadata/.plugins/
+/sample-login/
+
+# Database Dump
+/users-old.sql

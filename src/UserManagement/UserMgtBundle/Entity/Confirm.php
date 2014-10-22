@@ -35,9 +35,19 @@ class Confirm
     private $confirmkey;
 
     /**
+     * @ORM\Column(type="datetime", length=20)
+     */
+    private $confirmDate;
+
+    /**
      * @ORM\Column(name="is_confirmed", type="boolean")
      */
     private $isConfirmed;
+
+    public function __construct()
+    {
+        $this->setconfirmDate(new \DateTime());
+    }
 
     /**
      * Get id
@@ -139,5 +149,28 @@ class Confirm
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set confirmDate
+     *
+     * @param \DateTime $confirmDate
+     * @return Confirm
+     */
+    public function setConfirmDate($confirmDate)
+    {
+        $this->confirmDate = $confirmDate ? clone $confirmDate : null;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmDate
+     *
+     * @return \DateTime 
+     */
+    public function getConfirmDate()
+    {
+        return $this->confirmDate = $confirmDate ? clone $confirmDate : null;
     }
 }

@@ -126,7 +126,28 @@ body {
   color: #999; /* IE8 proofing */
   color: rgba(255,255,255,.5);
 }
+/*
+ * Action List
+ */
+ul.action-list{
+  list-style:none;
+  float:right;
+}
+ul.action-list li{
+  display:inline-block;
+  margin-left:10px;
+}
+ul.action-list li a, ul.action-list li a:hover{
+  text-decoration: none;
+}
+.table{
+  font-size:16px;
+}
 
+.table tbody tr:hover td, .table tbody tr:hover th {
+    background-color: #f0ad4e;
+    color:#000;
+}
 
 /*
  * Affix and center
@@ -144,7 +165,8 @@ body {
   }
   /* Start the vertical centering */
   .site-wrapper-inner {
-    vertical-align: middle;
+    /*vertical-align: middle;*/
+    padding-top:150px;
   }
   /* Handle the widths */
   .masthead,

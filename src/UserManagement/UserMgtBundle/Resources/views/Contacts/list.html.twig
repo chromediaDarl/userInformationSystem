@@ -1,0 +1,77 @@
+{# src/UserManagement/UserMgtBundle/Resources/views/Contacts/list.html.twig #}
+{% extends 'UserManagementUserMgtBundle::layout.html.twig' %}
+{% block body %}
+<div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          {% include 'UserManagementUserMgtBundle::mainnav.html.twig' %}
+
+          <div class="inner cover">
+          {% for flashMessage in app.session.flashbag.get('alert-danger') %}
+                <div class="alert alert-danger" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
+              {% for flashMessage in app.session.flashbag.get('alert-success') %}
+                <div class="alert alert-success" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
+            <h1 class="cover-heading">
+              {% block title %}List of Contacts{% endblock %}
+              <div class="f-right">
+                <button type="button" class="btn btn-success" onclick="window.location.href='{{ path('add-contacts') }}'">Add Contact</button>
+              </div>
+            </h1>
+            <!-- Single button -->
+            
+            {% if (contacts != null) %}
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>&nbsp;</th>
+                        </tr>
+                      </thead>
+                      {% for contact in contacts %}
+                          <tr align="left">
+                            <td>{{ contact.firstname }} {{ contact.lastname }}</td>
+                            <td>{{ contact.email }}</td>
+                            <td>{{ contact.phone }}</td>
+                            <td>
+                              <ul class="action-list">
+                                <li><a href="{{ path('edit-contacts', { 'id': contact.id}) }}"><span class="label label-info">Edit</span></a></li>
+                                <li><a href="{{ path('delete-contacts', { 'id': contact.id}) }}" onclick="return confirm('Are you sure you want to delete this contact?')"><span class="label label-danger">Delete</span></a></li>
+                              </ul>
+                            </td>
+                          </tr>
+                      {% endfor %}
+                  </table>
+                </div>
+            {% else %}
+              {% for flashMessage in app.session.flashbag.get('alert-info') %}
+                <div class="alert alert-info" role="alert">
+                {{ flashMessage }}
+                </div> 
+              {% endfor %}
+            {% endif %}
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}
