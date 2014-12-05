@@ -11,7 +11,7 @@ parameters:
     mailer_auth_mode: login
     mailer_host: smtp.gmail.com
     mailer_user: kimberlydarl.barbadillo@chromedia.com
-    mailer_password: hopelessly123
+    mailer_password: 
     locale: en
     secret: b77ef3b36c1c5828ee2e8a61d8eb8f5b23885648
     debug_toolbar: true
